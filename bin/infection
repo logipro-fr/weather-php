@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bin/php vendor/bin/infection --threads=$(nproc) $@

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DIR_VAR=var
+if [ ! -d "$DIR_VAR" ]; then
+    mkdir $DIR_VAR
+fi
+
+cd docker 
+docker compose build
+cd ..
+
+bin/composer install

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cmd=$(docker container ls | grep ap-php)
+status=$?
+if [ $status = 0 ]
+then
+docker exec \
+    -ti \
+    weather-php php $@
+else
+## execution de PHP de manière autonome (pas besoin d'un environnement de containers)
+docker run \
+    --init \
+    --rm \
+    -ti \
+    --name weather-php-running-script \
+    -v "$PWD":"$PWD" \
+    --user 1000:1000 \
+    -w "$PWD" \
+    weather-php:latest php $@
+fi

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bin/php vendor/bin/phpunit --display-warnings --display-notices --display-deprecation $@

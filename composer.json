@@ -1,0 +1,42 @@
+{
+    "name": "logipro/weather-php",
+    "type": "library",
+    "description": "A PHP component to use Weather API within your PHP project.",
+    "keywords": ["weather"],
+    "homepage": "https://github.com/logipro-fr/weather-php",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Tom Bruder",
+            "email": "tom.bruder@logipro.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/http-client": "^6.4"
+    },
+    "require-dev": {
+        "infection/extension-installer": "0.1.2",
+        "infection/infection": "^0.27",
+        "phpstan/phpdoc-parser": "^1.20",
+        "phpstan/phpstan": "1.10.15",
+        "phpunit/phpunit": "^10",
+        "squizlabs/php_codesniffer": "3.*"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "WeatherPHP\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WeatherPHP\\Tests\\": "tests/unit"
+        }
+    }
+}
