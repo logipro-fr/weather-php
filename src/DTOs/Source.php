@@ -2,9 +2,9 @@
 
 namespace WeatherPHP\DTOs;
 
-class Source {
+class Source
+{
     public function __construct(public readonly string $name)
     {
-        
     }
 }
