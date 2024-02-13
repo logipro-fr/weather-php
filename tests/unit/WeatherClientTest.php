@@ -2,9 +2,11 @@
 
 namespace WeatherPHP\Tests;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Safe\DateTimeImmutable;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use WeatherPHP\DTOs\Point;
@@ -36,12 +38,12 @@ class WeatherClientTest extends TestCase
                 "name" => "DEBUG",
                 "url" => "https://example.com/"
             ],
-            "results" => ["foo" => "bar", "sussus" => "ඞ"]
+            "result" => ["foo" => "bar", "sussus" => "ඞ"]
         ];
         $this->SUCCESSFUL_RESPONSE_TARGET = new WeatherInfo(
             "debug001",
             DateTimeImmutable::createFromFormat("Y-m-d H:i", "2024-01-01 12:30"),
-            new WeatherAPIReturn((object)($this->SUCCESSFUL_DATA["results"]), new Source("DEBUG"), false),
+            new WeatherAPIReturn((object)($this->SUCCESSFUL_DATA["result"]), new Source("DEBUG"), false),
             new Point(2.1, 40.531)
         );
 
@@ -59,11 +61,17 @@ class WeatherClientTest extends TestCase
     {
         $serviceA = new WeatherClient();
         $httpcli = $this->createMock(HttpClientInterface::class);
-        $serviceB = new WeatherClient($httpcli);
+        $serviceB = new WeatherClient($httpcli, "example.com");
 
         $this->assertInstanceOf(WeatherClient::class, $serviceA);
         $this->assertInstanceOf(WeatherClient::class, $serviceB);
         $this->assertNotEquals($serviceA, $serviceB);
+        $this->assertEquals("example.com/", $serviceB->getDomain());
+    }
+
+    public function testCreateBadDomain(){
+        $this->expectException(InvalidArgumentException::class);
+        $service = new WeatherClient(null, "@");
     }
 
     public function testGetSavedFromId(): void

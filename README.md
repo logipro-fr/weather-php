@@ -51,6 +51,7 @@ bin/phpunit
 ```shell
 bin/phpunit-integration
 ```
+**integration tests can only be run if you have a running [weather](https://github.com/logipro-fr/weather) instance**
 
 ### Quality
 #### Some indicators:
