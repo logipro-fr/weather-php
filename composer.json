@@ -9,7 +9,8 @@
     "authors": [
         {
             "name": "Tom Bruder",
-            "email": "tom.bruder@logipro.com"
+            "email": "tom.bruder@logipro.com",
+            "role": "Developer"
         }
     ],
     "require": {

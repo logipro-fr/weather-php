@@ -2,7 +2,6 @@
 
 namespace WeatherPHP\Tests;
 
-use Infection\Logger\Http\Response;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Safe\DateTimeImmutable;
