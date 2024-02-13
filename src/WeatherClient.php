@@ -2,6 +2,7 @@
 
 namespace WeatherPHP;
 
+use InvalidArgumentException;
 use Safe\DateTimeImmutable;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -11,22 +12,34 @@ use WeatherPHP\DTOs\WeatherAPIReturn;
 use WeatherPHP\DTOs\WeatherInfo;
 
 use function Safe\json_decode;
+use function Safe\preg_match;
 
 class WeatherClient
 {
-    private const BASE_URI = "https://http://127.0.0.1:10280/api/v1/";
-    public const GET_FROM_ID_URI = self::BASE_URI . "data/by-id/";
-    public const GET_FROM_DATE_POINT_URI = self::BASE_URI . "data/by-date-point/";
-    public const GET_VIA_API_URI = self::BASE_URI . "fetch/";
+    private const BASE_API_URI = "api/v1/";
+    public const GET_FROM_ID_URI = self::BASE_API_URI . "data/by-id";
+    public const GET_FROM_DATE_POINT_URI = self::BASE_API_URI . "data/by-date-point";
+    public const GET_VIA_API_URI = self::BASE_API_URI . "fetch";
+    public const DEFAULT_DOMAIN = "https://weather.logipro.fr/";
+    private const URL_VALIDATOR =
+        '/^(https?:\/\/)?([\w\-]+(?!\.\/)\.?)+(:\d+)?(\/([\w+&@#\/%?=~_|!:,.;]+(?!\.\/)\.?)+)*\/?$/';
 
     private HttpClientInterface $http;
 
-    public function __construct(HttpClientInterface $http = null)
-    {
+    public function __construct(
+        HttpClientInterface $http = null,
+        private string $domain = self::DEFAULT_DOMAIN
+    ) {
         if ($http == null) {
             $this->http = HttpClient::create();
         } else {
             $this->http = $http;
+        }
+        if (!preg_match(self::URL_VALIDATOR, $this->domain)) {
+            throw new InvalidArgumentException("domain is not a valid URI");
+        }
+        if (!str_ends_with($this->domain, "/")) {
+            $this->domain .= "/";
         }
     }
 
@@ -43,7 +56,7 @@ class WeatherClient
 
     private function constructIdRequest(string $id): string
     {
-        return self::GET_FROM_ID_URI . "?id=" . $id;
+        return $this->domain . self::GET_FROM_ID_URI . "?id=" . $id;
     }
 
     public function getSavedFromDateAndPoint(
@@ -67,9 +80,9 @@ class WeatherClient
         ?bool $precise,
         bool $exact
     ): string {
-        return self::GET_FROM_DATE_POINT_URI . "?date=" . $date->format("Y-m-d H:i:s.u") .
+        return $this->domain . self::GET_FROM_DATE_POINT_URI . "?date=" . $date->format("Y-m-d H:i:s.u") .
         "&point=" . $point->latitude . "," . $point->longitude .
-        ($precise !== null ? "&historicalOnly=" . ($precise ? "false" : "true") : "") .
+        ($precise !== null ? "&historicalOnly=" . ($precise ? "true" : "false") : "") .
             "&exact=" . ($exact ? "true" : "false");
     }
 
@@ -104,7 +117,7 @@ class WeatherClient
         foreach ($pointArray as $point) {
             $points .= ";" . $point->latitude . "," . $point->longitude;
         }
-        return self::GET_VIA_API_URI . "?date=" . $date->format("Y-m-d H:i:s.u") .
+        return $this->domain . self::GET_VIA_API_URI . "?date=" . $date->format("Y-m-d H:i:s.u") .
             "&points=" . substr($points, 1);
     }
 
@@ -113,8 +126,13 @@ class WeatherClient
         return new WeatherInfo(
             $data->id,
             DateTimeImmutable::createFromFormat("Y-m-d H:i:s.u", $data->date),
-            new WeatherAPIReturn($data->results, new Source($data->source->name), $data->historical),
+            new WeatherAPIReturn($data->result, new Source($data->source->name), $data->historical),
             new Point($data->latitude, $data->longitude)
         );
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
     }
 }

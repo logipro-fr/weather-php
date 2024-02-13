@@ -10,4 +10,5 @@ docker run \
     -v "$PWD":"$PWD" \
     --user 1000:1000 \
     -w "$PWD" \
+    --network weather-network \
     weather-php-interpreter:latest php $@
