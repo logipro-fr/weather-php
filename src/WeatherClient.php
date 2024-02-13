@@ -82,7 +82,7 @@ class WeatherClient
     ): string {
         return $this->domain . self::GET_FROM_DATE_POINT_URI . "?date=" . $date->format("Y-m-d H:i:s.u") .
         "&point=" . $point->latitude . "," . $point->longitude .
-        ($precise !== null ? "&historicalOnly=" . ($precise ? "false" : "true") : "") .
+        ($precise !== null ? "&historicalOnly=" . ($precise ? "true" : "false") : "") .
             "&exact=" . ($exact ? "true" : "false");
     }
 

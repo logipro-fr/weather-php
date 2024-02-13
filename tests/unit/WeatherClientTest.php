@@ -172,7 +172,7 @@ class WeatherClientTest extends TestCase
         $pointString = $point->latitude . "," . $point->longitude;
         $date = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2024-01-01 12:30:00");
         $target = $service->getDomain() . WeatherClient::GET_FROM_DATE_POINT_URI . "?date=" .
-            $date->format("Y-m-d H:i:s.u") . "&point=" . $pointString . "&historicalOnly=true&exact=false";
+            $date->format("Y-m-d H:i:s.u") . "&point=" . $pointString . "&historicalOnly=false&exact=false";
         $result = $reflector->getMethod("constructDatePointRequest")->invoke($service, $point, $date, false, false);
         $this->assertEquals($target, $result);
     }
