@@ -21,7 +21,8 @@ class WeatherClient
     public const GET_FROM_DATE_POINT_URI = self::BASE_API_URI . "data/by-date-point";
     public const GET_VIA_API_URI = self::BASE_API_URI . "fetch";
     public const DEFAULT_DOMAIN = "https://weather.logipro.fr/";
-    private const URL_VALIDATOR = '/^(https?:\/\/)([\w]+(?!\.\/)\.?)+(\/([\w+&@#\/%?=~_|!:,.;]+(?!\.\/)\.?)+)*\/?$/';
+    private const URL_VALIDATOR = 
+        '/^(https?:\/\/)([\w\-]+(?!\.\/)\.?)+(:\d+)?(\/([\w+&@#\/%?=~_|!:,.;]+(?!\.\/)\.?)+)*\/?$/';
 
     private HttpClientInterface $http;
 
