@@ -5,7 +5,7 @@
   backupGlobals="false"
   colors="true"
   bootstrap="tests/bootstrap.php"
-  cacheDirectory=".phpunit.cache">
+  cacheDirectory="var/.phpunit.cache">
   <coverage/>
   <testsuites>
     <testsuite name="all">

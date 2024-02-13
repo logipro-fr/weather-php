@@ -23,6 +23,6 @@ RUN docker-php-ext-configure zip \
     && docker-php-ext-configure mysqli \
     && docker-php-ext-install -j$(nproc) mysqli
 
-COPY ./php/php.ini $PHP_INI_DIR/php.ini
+COPY ./php.ini $PHP_INI_DIR/php.ini
 
 EXPOSE 9000
