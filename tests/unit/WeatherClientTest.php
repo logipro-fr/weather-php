@@ -69,7 +69,8 @@ class WeatherClientTest extends TestCase
         $this->assertEquals("example.com/", $serviceB->getDomain());
     }
 
-    public function testCreateBadDomain(){
+    public function testCreateBadDomain(): void
+    {
         $this->expectException(InvalidArgumentException::class);
         $service = new WeatherClient(null, "@");
     }

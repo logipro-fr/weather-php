@@ -49,7 +49,7 @@ class WeatherClient
         $response = $this->http->request("GET", $query);
         $responseData = $response->getContent();
 
-        /** @var object{"success": bool, "data": \stdClass, "errorCode": string} */
+        /** @var object{"success": bool, "data": \stdClass&object{id:string,date:string,latitude:float,longitude:float,historical:bool,source:object{name:string},result:\stdClass}, "errorCode": string} */
         $dataObj = json_decode($responseData);
         return $this->objectToWeatherInfo($dataObj->data);
     }
@@ -69,7 +69,7 @@ class WeatherClient
         $response = $this->http->request("GET", $query);
         $responseData = $response->getContent();
 
-        /** @var object{"success": bool, "data": \stdClass, "errorCode": string} */
+        /** @var object{"success": bool, "data": \stdClass&object{id:string,date:string,latitude:float,longitude:float,historical:bool,source:object{name:string},result:\stdClass}, "errorCode": string} */
         $dataObj = json_decode($responseData);
         return $this->objectToWeatherInfo($dataObj->data);
     }
@@ -101,6 +101,7 @@ class WeatherClient
         $data = $dataObj->data;
         $res = [];
         foreach ($data as $info) {
+            /** @var \stdClass&object{id:string,date:string,latitude:float,longitude:float,historical:bool,source:object{name:string},result:\stdClass} $info */
             array_push($res, $this->objectToWeatherInfo($info));
         }
         return $res;
@@ -121,6 +122,7 @@ class WeatherClient
             "&points=" . substr($points, 1);
     }
 
+    /** @param \stdClass&object{id:string,date:string,latitude:float,longitude:float,historical:bool,source:object{name:string},result:\stdClass} $data */
     private function objectToWeatherInfo(\stdClass $data): WeatherInfo
     {
         return new WeatherInfo(
