@@ -35,6 +35,5 @@ class WeatherClientTest extends TestCase
 
     public function testFetch(): void
     {
-        
     }
 }
